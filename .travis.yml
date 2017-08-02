@@ -2,4 +2,7 @@ language: python
 
 services: mysql
 
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS donorworkflow_test;'
+
 script: pytest
