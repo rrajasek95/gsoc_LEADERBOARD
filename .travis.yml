@@ -1,3 +1,5 @@
 language: python
 
+services: mysql
+
 script: pytest
