@@ -8,6 +8,7 @@ from googleapiclient import discovery, errors
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
+from process import Popen, PIPE
 
 try:
     import argparse
@@ -107,5 +108,11 @@ def outgoing_mail_process(donor_email, contact_person, contact_date, contact_tim
         closing + '\n\n' + signature + '\n\n' + footer
     draft_message = create_message(
         'SphinxCapt Mail', donor_email, subject_line, msg_body)
-    message_obj = send_message(service, 'me', message=draft_message)
+    message_obj = send_wmlabs_message(donor_email, message=draft_message)
     return message_obj, mail_code, msg_body
+
+
+def send_wmlabs_message(recipient, message):
+    p = Popen(["/usr/sbin/exim", "-odf", "-i"], recipient, stdin=PIPE,
+              universal_newlines=True)
+    p.communicate(message)
